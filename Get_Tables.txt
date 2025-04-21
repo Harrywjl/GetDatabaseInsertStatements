@@ -1,0 +1,23 @@
+DROP TABLE Schedules;
+DROP TABLE Gradebook;
+DROP TABLE Students;
+DROP TABLE Assignments;
+DROP TABLE AssignmentTypes;
+DROP TABLE Sections;
+DROP TABLE Rooms;
+DROP TABLE Teachers;
+DROP TABLE Departments;
+DROP TABLE Courses;
+DROP TABLE CourseTypes;
+
+CREATE TABLE Students ( student_id integer, name varchar(255), PRIMARY KEY (student_id));
+CREATE TABLE Departments ( department_id integer, department_name varchar(255), PRIMARY KEY(department_id));
+CREATE TABLE Teachers ( teacher_id integer, department_id integer ,name varchar(255), PRIMARY KEY(teacher_id), FOREIGN KEY (department_id) REFERENCES Departments(department_id));
+CREATE TABLE Rooms (room_id integer, room varchar(255), PRIMARY KEY (room_id));
+CREATE TABLE AssignmentTypes (assignment_type_id integer, assignment_type varchar(255), PRIMARY KEY (assignment_type_id));
+CREATE TABLE CourseTypes (course_type_id integer, course_type varchar(255), PRIMARY KEY (course_type_id));
+CREATE TABLE Courses (course_id integer, course_type_id integer, course_name varchar(255), PRIMARY KEY (course_id), FOREIGN KEY (course_type_id) REFERENCES CourseTypes(course_type_id));
+CREATE TABLE Sections (section_id integer, course_id integer, teacher_id integer, room_id integer, period integer, PRIMARY KEY (section_id), FOREIGN KEY (course_id) REFERENCES Courses(course_id), FOREIGN KEY (teacher_id) REFERENCES Teachers(teacher_id), FOREIGN KEY (room_id) REFERENCES Rooms(room_id));
+CREATE TABLE Schedules ( student_id integer, section_id integer, FOREIGN KEY (student_id) REFERENCES Students(student_id), FOREIGN KEY (section_id) REFERENCES Sections(section_id));
+CREATE TABLE Assignments (assignment_id integer, section_id integer, assignment_type_id integer, assignment_name varchar(255), PRIMARY KEY (assignment_id), FOREIGN KEY (section_id) REFERENCES Sections(section_id), FOREIGN KEY (assignment_type_id) REFERENCES AssignmentTypes(assignment_type_id));
+CREATE TABLE Gradebook (assignment_id integer, student_id integer, grade integer, FOREIGN KEY (assignment_id) REFERENCES Assignments(assignment_id), FOREIGN KEY (student_id) REFERENCES Students(student_id));
